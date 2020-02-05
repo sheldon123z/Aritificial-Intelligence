@@ -111,7 +111,7 @@ public class homework{
     	try {
 			//TODO change to output.txt
     		//create a new file for output
-			File file = new File("/Users/xiaodongzheng/eclipse-workspace/Back_to_the_future/src/output.txt");
+			File file = new File("/Users/xiaodongzheng/git/repository/Back_to_the_future/src/output.txt");
 			output = new BufferedWriter(new FileWriter(file));
 			if(find)
 			{      			
