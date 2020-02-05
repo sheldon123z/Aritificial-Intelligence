@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>PA3_MineSweeper</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>src/GameBoardPanel.java</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/OneDrive%20-%20University%20of%20Southern%20California/USC/Classes/CSCI%20455X/HWs/Programming%20Assignment/PA3/startercode.0/GameBoardPanel.java</locationURI>
+		</link>
+		<link>
+			<name>src/MineField.java</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/OneDrive%20-%20University%20of%20Southern%20California/USC/Classes/CSCI%20455X/HWs/Programming%20Assignment/PA3/startercode.0/MineField.java</locationURI>
+		</link>
+		<link>
+			<name>src/MineSweeper.java</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/OneDrive%20-%20University%20of%20Southern%20California/USC/Classes/CSCI%20455X/HWs/Programming%20Assignment/PA3/startercode.0/MineSweeper.java</locationURI>
+		</link>
+		<link>
+			<name>src/MineSweeperFixed.java</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/OneDrive%20-%20University%20of%20Southern%20California/USC/Classes/CSCI%20455X/HWs/Programming%20Assignment/PA3/startercode.0/MineSweeperFixed.java</locationURI>
+		</link>
+		<link>
+			<name>src/VisibleField.java</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/OneDrive%20-%20University%20of%20Southern%20California/USC/Classes/CSCI%20455X/HWs/Programming%20Assignment/PA3/startercode.0/VisibleField.java</locationURI>
+		</link>
+	</linkedResources>
+</projectDescription>
