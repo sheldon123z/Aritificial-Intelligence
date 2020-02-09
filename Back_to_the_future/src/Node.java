@@ -1,8 +1,9 @@
 
-/*
- * Node class
+/**
+ * basic Node class, each node records a path state
+ * @author xiaodongzheng
+ *
  */
-
 class Node{
 	public Coordinate coord;
     public Node parent;

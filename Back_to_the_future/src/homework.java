@@ -24,7 +24,7 @@ public class homework{
     	
         try {
         	String algorithm = "";
-            File input = new File("/Users/xiaodongzheng/git/repository/Back_to_the_future/src/BFS_test.txt");
+            File input = new File("input.txt");
             
             BufferedReader reader = new BufferedReader(new FileReader(input));
             
@@ -109,9 +109,8 @@ public class homework{
     	//writer for output
     	BufferedWriter output = null;
     	try {
-			//TODO change to output.txt
     		//create a new file for output
-			File file = new File("/Users/xiaodongzheng/git/repository/Back_to_the_future/src/output.txt");
+			File file = new File("output.txt");
 			output = new BufferedWriter(new FileWriter(file));
 			if(find)
 			{      			
@@ -295,6 +294,7 @@ public class homework{
 							{
 								frontier.remove(n);
 								frontier.add(child);
+								break;
 							}
 					}
 					

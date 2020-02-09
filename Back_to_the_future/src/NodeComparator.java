@@ -1,5 +1,9 @@
 import java.util.Comparator;
-
+/**
+ * comparator for priority queue for UCS
+ * @author xiaodongzheng
+ *
+ */
 public class NodeComparator implements Comparator<Node>{
 
 	@Override

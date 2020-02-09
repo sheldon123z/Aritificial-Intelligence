@@ -1,6 +1,6 @@
 import java.util.Comparator;
 /**
- * used to initialize the priority queue
+ * used to initialize the priority queue for A star algorithm
  * @author xiaodongzheng
  *
  */

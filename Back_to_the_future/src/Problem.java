@@ -102,7 +102,7 @@ public class Problem{
 			if(action == 1)
 			{
 				if(homework.jauntPoint.containsKey(parent.coord))
-					stepCost = homework.jauntPoint.get(parent.coord).year - parent.coord.year;
+					stepCost = Math.abs(homework.jauntPoint.get(parent.coord).year - parent.coord.year);
 				else
 					stepCost = 10;
 			}

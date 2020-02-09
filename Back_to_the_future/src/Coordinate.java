@@ -1,3 +1,8 @@
+/**
+ * coordiante class, contains the coordinate of the path node
+ * @author xiaodongzheng
+ *
+ */
 class Coordinate{
 	
 	public int x;
