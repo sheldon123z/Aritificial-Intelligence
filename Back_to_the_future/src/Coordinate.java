@@ -9,7 +9,8 @@ class Coordinate{
 	public int y;
 	public int year;
 
-	
+	public Coordinate() {
+	}
 	public Coordinate(int x, int y, int year)
 	{
 		this.x = x;
