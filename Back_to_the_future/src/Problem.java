@@ -88,8 +88,7 @@ public class Problem{
 	public boolean goalTest(Coordinate state) {
 		if(state==null)
 		{
-			System.out.println("null state");
-			return false;
+			System.out.println("null");
 		}
 			
 		if(state.equals(this.targetState))
