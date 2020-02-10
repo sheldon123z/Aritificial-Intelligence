@@ -35,18 +35,6 @@ class Coordinate{
 	 public int hashCode() {
         return this.x + 19 * this.y + 23 * this.year + 11;
     }
-//	public void setX(int value)
-//	{
-//		this.x = value;
-//	}
-//	public void setY(int value)
-//	{
-//		this.y = value;
-//	}
-//	public void setYear(int value)
-//	{
-//		this.year = value;
-//	}
 	
 	 public void printCoordinate()
 	 {

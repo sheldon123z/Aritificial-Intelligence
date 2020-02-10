@@ -285,40 +285,70 @@ public class homework{
 			{	
 				explored.add(parent.coord);
 				exploredHash.put(parent.coord, parent);
-				PriorityQueue<Node> children = new PriorityQueue<>(new AStarNodeComparator());
+//				PriorityQueue<Node> children = new PriorityQueue<>(new AStarNodeComparator());
+//				for(int action = 1; action <= 8;action++)
+//					{
+//						children.add(childNode(problem,parent,action));
+//					}
+//				while(!children.isEmpty())
+//				{
+//					Node child = children.poll();
+//					
+//					if(!explored.contains(child.coord) && !frontierHash.containsKey(child.coord))
+//					{
+//						frontier.add(child);
+//						frontierHash.put(child.coord,child);
+//					}
+//					else if(frontierHash.containsKey(child.coord))
+//					{
+//						Node n = frontierHash.get(child.coord);
+//						if(((n.pathCost) > (child.pathCost)))
+//						{
+//							frontier.remove(n);
+//							frontier.add(child);
+//							frontierHash.put(child.coord, child);
+//						}
+//					}
+//					else if(explored.contains(child.coord))
+//					{
+//						Node n =  exploredHash.get(child.coord);
+//						if(((n.pathCost) > (child.pathCost)))
+//						{
+//							explored.remove(child.coord);
+//							exploredHash.remove(child.coord);
+//							frontier.add(child);
+//							frontierHash.put(child.coord, child);
+//						}
+//					}
+//				}
+				/*
+				 * the follow part is also correct but it is quicker. we can remove the node which has larger
+				 * path cost directly from queue by using a hashmap to track that node
+				 * */
 				for(int action = 1; action <= 8;action++)
-					{
-						children.add(childNode(problem,parent,action));
-					}
-				while(!children.isEmpty())
 				{
-					Node child = children.poll();
+					//produce a new child node
+					Node child = childNode(problem,parent,action);
 					
+					//if this node is a new node
 					if(!explored.contains(child.coord) && !frontierHash.containsKey(child.coord))
 					{
 						frontier.add(child);
 						frontierHash.put(child.coord,child);
 					}
+					//replace the node has same coordinate with child and add child to the queue
 					else if(frontierHash.containsKey(child.coord))
 					{
 						Node n = frontierHash.get(child.coord);
-						if(((n.pathCost) > (child.pathCost)))
+						
+						if((n.pathCost > child.pathCost))
 						{
+							frontier.remove(n);
 							frontier.add(child);
 							frontierHash.put(child.coord, child);
-						}
+						}	
 					}
-					else if(explored.contains(child.coord))
-					{
-						Node n =  exploredHash.get(child.coord);
-						if(((n.pathCost) > (child.pathCost)))
-						{
-							explored.remove(child.coord);
-							exploredHash.remove(child.coord);
-							frontier.add(child);
-							frontierHash.put(child.coord, child);
-						}
-					}
+					
 				}
 			}
 		}
@@ -362,82 +392,83 @@ public class homework{
 				{	
 					explored.add(parent.coord);
 					exploredHash.put(parent.coord, parent);
-					PriorityQueue<Node> children = new PriorityQueue<>(new AStarNodeComparator());
+					/*
+					 * this part is different logic but same implementation
+					 */
+//					PriorityQueue<Node> children = new PriorityQueue<>(new AStarNodeComparator());
+//					for(int action = 1; action <= 8;action++)
+//						{
+//							children.add(childNode(problem,parent,action));
+//						}
+//					while(!children.isEmpty())
+//					{
+//						Node child = children.poll();
+//						//h is the heuristic of the node 
+//						int h = Problem.heuristic(child);
+//						//if the node is new then add it into frontier
+//						if(!explored.contains(child.coord) && !frontierHash.containsKey(child.coord))
+//						{
+//							frontier.add(child);
+//							frontierHash.put(child.coord,child);
+//						}
+//						/*if the node has been visited then check if it has lower path cost*/
+//						else if(frontierHash.containsKey(child.coord))
+//						{
+//							Node n = frontierHash.get(child.coord);
+//							// h is calculated by coordinate attribute so child and the n nodes have
+//							//same heuristic
+//							if(((n.pathCost + h) > (child.pathCost + h)))
+//							{
+//								frontier.remove(n);
+//								frontier.add(child);
+//								frontierHash.put(child.coord, child);
+//							}
+//						}
+//						/*if child is explored check if it has lower path cost
+//						if it has lower path cost, remove it from explored and add it to frontier
+//						/the next outer loop will expand this node and add it into explored again*/
+//						else if(explored.contains(child.coord))
+//						{
+//							Node n =  exploredHash.get(child.coord);
+//							if(((n.pathCost + h) > (child.pathCost + h)))
+//							{
+//								explored.remove(child.coord);
+//								exploredHash.remove(child.coord);
+//								frontier.add(child);
+//								frontierHash.put(child.coord, child);
+//							}
+//						}
+//					}
+					
+					/*
+					 * the follow part is also correct but it is quicker. we can remove the node which has larger
+					 * path cost directly from queue by using a hashmap to track that node
+					 * */
 					for(int action = 1; action <= 8;action++)
-						{
-							children.add(childNode(problem,parent,action));
-						}
-					while(!children.isEmpty())
 					{
-						Node child = children.poll();
-						//h is the heuristic of the node 
+						//produce a new child node
+						Node child = childNode(problem,parent,action);
 						int h = Problem.heuristic(child);
-						//if the node is new then add it into frontier
+						//if this node is a new node
 						if(!explored.contains(child.coord) && !frontierHash.containsKey(child.coord))
 						{
 							frontier.add(child);
 							frontierHash.put(child.coord,child);
 						}
-						/*if the node has been visited then check if it has lower path cost*/
+						//replace the node has same coordinate with child and add child to the queue
 						else if(frontierHash.containsKey(child.coord))
 						{
 							Node n = frontierHash.get(child.coord);
-							// h is calculated by coordinate attribute so child and the n nodes have
-							//same heuristic
+							
 							if(((n.pathCost + h) > (child.pathCost + h)))
 							{
+								frontier.remove(n);
 								frontier.add(child);
 								frontierHash.put(child.coord, child);
-							}
+							}	
 						}
-						/*if child is explored check if it has lower path cost
-						if it has lower path cost, remove it from explored and add it to frontier
-						/the next outer loop will expand this node and add it into explored again*/
-						else if(explored.contains(child.coord))
-						{
-							Node n =  exploredHash.get(child.coord);
-							if(((n.pathCost + h) > (child.pathCost + h)))
-							{
-								explored.remove(child.coord);
-								exploredHash.remove(child.coord);
-								frontier.add(child);
-								frontierHash.put(child.coord, child);
-							}
-						}
+						
 					}
-					
-					/*the follow part is also correct but it does remove duplicate element which path 
-					 * cost is higher than the child that is expanding, in java this operation will cost
-					 * at least liner time, since the traversal by object's attribute in priority queue cost O(n)
-					 * and add/ remove cost Ologn) therefore, O(nlogn)is needed
-					 * */
-//					for(int action = 1; action <= 8;action++)
-//					{
-//						//produce a new child node
-//						Node child = childNode(problem,parent,action);
-//						int c_h = Problem.heuristic(child);
-//						if(!explored.contains(child.coord) && !frontierHash.contains(child.coord))
-//						{
-//							frontier.add(child);
-//							frontierHash.add(child.coord);
-//						}
-//						//replace the node has same coordinate with child and add child to the queue
-//						else if(frontierHash.contains(child.coord))
-//						{
-//							for(Node n: frontier)
-//							{
-//								/*here is different from UCS*/
-//								int n_h = Problem.heuristic(n);
-//								if(n.coord.equals(child.coord) && ((n.pathCost + n_h) > (child.pathCost + c_h)))
-//								{
-//									frontier.remove(n);
-//									frontier.add(child);
-//									break;
-//								}
-//							}	
-//						}
-//						
-//					}
 				}
 			}
 			return res;

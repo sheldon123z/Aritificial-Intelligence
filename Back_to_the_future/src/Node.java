@@ -59,6 +59,22 @@ class Node{
     {
     	return this.stepCost;
     }
-    
-    
+    @Override
+	public boolean equals(Object o) {
+		if(o == null)
+			return false;
+		if (getClass() != o.getClass()) {
+            return false;
+        }
+        final Node other = (Node)o;
+        if(!this.coord.equals(other.coord))
+    	{
+    		return false;
+    	}
+        return true;		
+       }
+	@Override
+	 public int hashCode() {
+        return this.coord.hashCode();
+    }
 }
