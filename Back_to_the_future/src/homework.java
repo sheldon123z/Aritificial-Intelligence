@@ -156,27 +156,6 @@ public class homework{
      * @param action
      * @return return true if is, false otherwise
      */
-//    public static boolean checkIfValidCoord(Node node, int action)
-//	{
-//		
-//		if(node.coord.x-1 >= 0 && node.coord.x < width && node.coord.y >= 0 && node.coord.y < height && action == 1)
-//			return true;
-//		if(node.coord.x-1>=0 && node.coord.x < width && node.coord.y >= 0 && node.coord.y+1 < height && action == 2)
-//			return true;
-//		if(node.coord.x >=0 && node.coord.x < width && node.coord.y >= 0 && node.coord.y+1 < height && action == 3)
-//			return true;
-//		if(node.coord.x >=0 && node.coord.x +1< width && node.coord.y >= 0 && node.coord.y +1< height && action == 4)
-//			return true;
-//		if(node.coord.x >=0 && node.coord.x+1 < width && node.coord.y >=0 && node.coord.y < height && action == 5)
-//			return true;
-//		if(node.coord.x >=0 && node.coord.x +1< width && node.coord.y -1 >= 0 && node.coord.y < height && action == 6)
-//			return true;
-//		if(node.coord.x >=0 && node.coord.x < width && node.coord.y-1 >= 0 && node.coord.y < height && action == 7)
-//			return true;
-//		if(node.coord.x -1 >=0 && node.coord.x < width && node.coord.y -1 >= 0 && node.coord.y < height && action == 8)
-//			return true;
-//		return false;
-//	}
     public static boolean checkIfValidCoord(Node node)
     {
     	if(node.coord.x >= 0 && node.coord.x < width && node.coord.y >= 0 && node.coord.y < height)
@@ -213,75 +192,85 @@ public class homework{
 	 * @param action
 	 * @return
 	 */
-	public static Coordinate inphaseAction(Node node, int action)
+	public static Coordinate inphaseAction(Node parent, int action)
 	{
-
+//			if(jauntPoint.containsKey(parent.coord))
+//				return jauntPoint.get(parent.coord);
+//			else 
 			if(action == 1)
 			{
-				if(jauntPoint.containsKey(node.coord))
-					return jauntPoint.get(node.coord);
-				else
-				 return new Coordinate(node.coord.x-1 ,node.coord.y, node.coord.year);
+				Coordinate coord = new Coordinate(parent.coord.x-1 ,parent.coord.y, parent.coord.year);
+				if(jauntPoint.containsKey(coord))
+					return jauntPoint.get(coord);
+				else 
+				 return coord;
 			}
 				
 			else if(action == 2)
 			{
-				if(jauntPoint.containsKey(node.coord))
-					return jauntPoint.get(node.coord);
+				Coordinate coord = new Coordinate(parent.coord.x-1 ,parent.coord.y+1, parent.coord.year);	
+				if(jauntPoint.containsKey(coord))
+					return jauntPoint.get(	coord);
 				else
-					return new Coordinate(node.coord.x-1 ,node.coord.y+1, node.coord.year);
+					return coord;
 			}
 			
 			else if(action == 3)
 			{
-				if(jauntPoint.containsKey(node.coord))
-					return jauntPoint.get(node.coord);
+				Coordinate coord = new Coordinate(parent.coord.x ,parent.coord.y+1, parent.coord.year);
+				if(jauntPoint.containsKey(coord))
+					return jauntPoint.get(coord);
 				else
-					return new Coordinate(node.coord.x ,node.coord.y+1, node.coord.year);
+					return coord;
 			}
 				
 			
 			else if(action == 4)
 			{
-				if(jauntPoint.containsKey(node.coord))
-					return jauntPoint.get(node.coord);
+				Coordinate coord = new Coordinate(parent.coord.x+1 ,parent.coord.y+1, parent.coord.year);
+				if(jauntPoint.containsKey(coord))
+					return jauntPoint.get(coord);
 				else
-					return new Coordinate(node.coord.x+1 ,node.coord.y+1, node.coord.year);
+					return coord;
 			}
 				
 			
 			else if(action == 5)
 			{
-				if(jauntPoint.containsKey(node.coord))
-					return jauntPoint.get(node.coord);
+				Coordinate coord = new Coordinate(parent.coord.x+1 ,parent.coord.y, parent.coord.year);
+				if(jauntPoint.containsKey(coord))
+					return jauntPoint.get(coord);
 				else
-					return new Coordinate(node.coord.x+1 ,node.coord.y, node.coord.year);
+					return coord;
 			}
 				
 			
 			else if(action == 6)
 			{
-				if(jauntPoint.containsKey(node.coord))
-					return jauntPoint.get(node.coord);
+				Coordinate coord = new Coordinate(parent.coord.x+1 ,parent.coord.y-1, parent.coord.year);
+				if(jauntPoint.containsKey(coord))
+					return jauntPoint.get(coord);
 				else
-					return new Coordinate(node.coord.x+1 ,node.coord.y-1, node.coord.year);
+					return coord;
 			}
 				
 			
 			else if(action == 7)
 			{
-				if(jauntPoint.containsKey(node.coord))
-					return jauntPoint.get(node.coord);
+				Coordinate coord = new Coordinate(parent.coord.x ,parent.coord.y-1, parent.coord.year);
+				if(jauntPoint.containsKey(coord))
+					return jauntPoint.get(coord);
 				else
-					return new Coordinate(node.coord.x ,node.coord.y-1, node.coord.year);
+					return coord;
 			}
 			
 			else
 			{
-				if(jauntPoint.containsKey(node.coord))
-					return jauntPoint.get(node.coord);
+				Coordinate coord = new Coordinate(parent.coord.x-1 ,parent.coord.y-1, parent.coord.year);
+				if(jauntPoint.containsKey(coord))
+					return jauntPoint.get(coord);
 				else
-					return new Coordinate(node.coord.x-1 ,node.coord.y-1, node.coord.year);
+					return coord;
 			}
 		
 	}
@@ -317,7 +306,8 @@ public class homework{
 				find = false;
 				return res;
 			}
-			parent = frontier.remove();
+			parent = frontier.poll();
+			frontierHash.remove(parent.coord);
 			explored.add(parent.coord);
 			//check actions
 			for(int action = 1; action <= 8;action++)
@@ -372,11 +362,9 @@ public class homework{
 				find = true;
 				return solution(parent, res);
 			}
-			else
-			{	
-				explored.add(parent.coord);
-				exploredHash.put(parent.coord, parent);
-//				PriorityQueue<Node> children = new PriorityQueue<>(new AStarNodeComparator());
+			explored.add(parent.coord);
+			exploredHash.put(parent.coord, parent);
+//				PriorityQueue<Node> children = new PriorityQueue<>(new NodeComparator());
 //				for(int action = 1; action <= 8;action++)
 //					{
 //						children.add(childNode(problem,parent,action));
@@ -412,37 +400,37 @@ public class homework{
 //						}
 //					}
 //				}
-				/*
-				 * the follow part is also correct but it is quicker. we can remove the node which has larger
-				 * path cost directly from queue by using a hashmap to track that node
-				 * */
-				for(int action = 1; action <= 8;action++)
-				{
-					//produce a new child node
-					Node child = childNode(problem,parent,action);
-					if(!checkIfValidCoord(child))
-						continue;
-					else {
-						//if this node is a new node
-						if(!explored.contains(child.coord) && !frontierHash.containsKey(child.coord))
+			/*
+			 * the follow part is also correct but it is quicker. we can remove the node which has larger
+			 * path cost directly from queue by using a hashmap to track that node
+			 * */
+			for(int action = 1; action <= 8;action++)
+			{
+				//produce a new child node
+				Node child = childNode(problem,parent,action);
+				if(!checkIfValidCoord(child))
+					continue;
+				else {
+					//if this node is a new node
+					if(!explored.contains(child.coord) && !frontierHash.containsKey(child.coord))
+					{
+						frontier.add(child);
+						frontierHash.put(child.coord,child);
+					}
+					//replace the node has same coordinate with child and add child to the queue
+					else if(frontierHash.containsKey(child.coord))
+					{
+						Node n = frontierHash.get(child.coord);
+						
+						if((n.pathCost > child.pathCost))
 						{
+							frontier.remove(n);
 							frontier.add(child);
-							frontierHash.put(child.coord,child);
-						}
-						//replace the node has same coordinate with child and add child to the queue
-						else if(frontierHash.containsKey(child.coord))
-						{
-							Node n = frontierHash.get(child.coord);
-							
-							if((n.pathCost > child.pathCost))
-							{
-								frontier.remove(n);
-								frontier.add(child);
-								frontierHash.put(child.coord, child);
-							}	
-						}
-					}	
-				}
+							frontierHash.put(child.coord, child);
+						}	
+					}
+				}	
+			
 			}
 		}
 		return res;
