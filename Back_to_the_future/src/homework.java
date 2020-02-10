@@ -23,6 +23,7 @@ public class homework{
         
     	
         try {
+        	long start = System.currentTimeMillis();
         	String algorithm = "";
             File input = new File("input.txt");
             
@@ -78,6 +79,9 @@ public class homework{
             
             // output the result 
             outputResult(algorithm);
+            long end = System.currentTimeMillis();
+
+            System.out.println((end - start) + " ms");
     
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -85,7 +89,7 @@ public class homework{
         {
             e.printStackTrace();
         } 
-       
+        
     }
     /**
      * Output the result to a file
@@ -250,9 +254,11 @@ public class homework{
 	 */
 	public static LinkedList<Node> btfUCS(Problem problem) {
 		
+		//here is different from A*, here used a different comparator to initialize the priority queue
 		PriorityQueue<Node> frontier = new PriorityQueue<>(new NodeComparator());
-		HashSet<Coordinate> frontierHash = new HashSet<>();
+		HashMap<Coordinate,Node> frontierHash = new HashMap<>();
 		HashSet<Coordinate> explored = new HashSet<>();
+		HashMap<Coordinate,Node> exploredHash = new HashMap<>();
 		LinkedList<Node> res = new LinkedList<>();
 		//initialize a node with initial state 
 		Node parent = new Node(problem.initialState,null,0,0,0);
@@ -265,7 +271,7 @@ public class homework{
 		}
 		
 		frontier.add(parent);
-		frontierHash.add(parent.coord);
+		frontierHash.put(parent.coord,parent);
 		while(!frontier.isEmpty())
 		{
 			parent = frontier.poll();
@@ -275,34 +281,49 @@ public class homework{
 				find = true;
 				return solution(parent, res);
 			}
-			explored.add(parent.coord);
-			for(int action = 1; action <= 8;action++)
-			{
-				//produce a new child node
-				Node child = childNode(problem,parent,action);
-				if(!explored.contains(child.coord) && !frontierHash.contains(child.coord))
-				{
-					frontier.add(child);
-					frontierHash.add(child.coord);
-				}
-				//replace the node has same coordinate with child and add child to the queue
-				else if(frontierHash.contains(child.coord))
-				{
-					for(Node n: frontier)
+			else
+			{	
+				explored.add(parent.coord);
+				exploredHash.put(parent.coord, parent);
+				PriorityQueue<Node> children = new PriorityQueue<>(new AStarNodeComparator());
+				for(int action = 1; action <= 8;action++)
 					{
-						if(n.coord.equals(child.coord) && n.pathCost > child.pathCost)
-							{
-								frontier.remove(n);
-								frontier.add(child);
-								break;
-							}
+						children.add(childNode(problem,parent,action));
 					}
+				while(!children.isEmpty())
+				{
+					Node child = children.poll();
 					
+					if(!explored.contains(child.coord) && !frontierHash.containsKey(child.coord))
+					{
+						frontier.add(child);
+						frontierHash.put(child.coord,child);
+					}
+					else if(frontierHash.containsKey(child.coord))
+					{
+						Node n = frontierHash.get(child.coord);
+						if(((n.pathCost) > (child.pathCost)))
+						{
+							frontier.add(child);
+							frontierHash.put(child.coord, child);
+						}
+					}
+					else if(explored.contains(child.coord))
+					{
+						Node n =  exploredHash.get(child.coord);
+						if(((n.pathCost) > (child.pathCost)))
+						{
+							explored.remove(child.coord);
+							exploredHash.remove(child.coord);
+							frontier.add(child);
+							frontierHash.put(child.coord, child);
+						}
+					}
 				}
 			}
 		}
 		return res;
-	}
+}
 	/**
 	 * A* search algorithm
 	 * it is identical to UCS except the priority queue is ordered by g+h rather than g
@@ -312,8 +333,9 @@ public class homework{
 	public static LinkedList<Node> btfA_Star(Problem problem) {
 			//here is different from UCS, here used a different comparator to initialize the priority queue
 			PriorityQueue<Node> frontier = new PriorityQueue<>(new AStarNodeComparator());
-			HashSet<Coordinate> frontierHash = new HashSet<>();
+			HashMap<Coordinate,Node> frontierHash = new HashMap<>();
 			HashSet<Coordinate> explored = new HashSet<>();
+			HashMap<Coordinate,Node> exploredHash = new HashMap<>();
 			LinkedList<Node> res = new LinkedList<>();
 			//initialize a node with initial state 
 			Node parent = new Node(problem.initialState,null,0,0,0);
@@ -326,7 +348,7 @@ public class homework{
 			}
 			
 			frontier.add(parent);
-			frontierHash.add(parent.coord);
+			frontierHash.put(parent.coord,parent);
 			while(!frontier.isEmpty())
 			{
 				parent = frontier.poll();
@@ -336,32 +358,86 @@ public class homework{
 					find = true;
 					return solution(parent, res);
 				}
-				explored.add(parent.coord);
-				for(int action = 1; action <= 8;action++)
-				{
-					//produce a new child node
-					Node child = childNode(problem,parent,action);
-					int c_h = Problem.heuristic(child);
-					if(!explored.contains(child.coord) && !frontierHash.contains(child.coord))
-					{
-						frontier.add(child);
-						frontierHash.add(child.coord);
-					}
-					//replace the node has same coordinate with child and add child to the queue
-					else if(frontierHash.contains(child.coord))
-					{
-						for(Node n: frontier)
+				else
+				{	
+					explored.add(parent.coord);
+					exploredHash.put(parent.coord, parent);
+					PriorityQueue<Node> children = new PriorityQueue<>(new AStarNodeComparator());
+					for(int action = 1; action <= 8;action++)
 						{
-							//here is different from UCS
-							int n_h = Problem.heuristic(n);
-							if(n.coord.equals(child.coord) && ((n.pathCost + n_h) > (child.pathCost + c_h)))
+							children.add(childNode(problem,parent,action));
+						}
+					while(!children.isEmpty())
+					{
+						Node child = children.poll();
+						//h is the heuristic of the node 
+						int h = Problem.heuristic(child);
+						//if the node is new then add it into frontier
+						if(!explored.contains(child.coord) && !frontierHash.containsKey(child.coord))
+						{
+							frontier.add(child);
+							frontierHash.put(child.coord,child);
+						}
+						/*if the node has been visited then check if it has lower path cost*/
+						else if(frontierHash.containsKey(child.coord))
+						{
+							Node n = frontierHash.get(child.coord);
+							// h is calculated by coordinate attribute so child and the n nodes have
+							//same heuristic
+							if(((n.pathCost + h) > (child.pathCost + h)))
 							{
-								frontier.remove(n);
 								frontier.add(child);
-								break;
+								frontierHash.put(child.coord, child);
 							}
-						}	
+						}
+						/*if child is explored check if it has lower path cost
+						if it has lower path cost, remove it from explored and add it to frontier
+						/the next outer loop will expand this node and add it into explored again*/
+						else if(explored.contains(child.coord))
+						{
+							Node n =  exploredHash.get(child.coord);
+							if(((n.pathCost + h) > (child.pathCost + h)))
+							{
+								explored.remove(child.coord);
+								exploredHash.remove(child.coord);
+								frontier.add(child);
+								frontierHash.put(child.coord, child);
+							}
+						}
 					}
+					
+					/*the follow part is also correct but it does remove duplicate element which path 
+					 * cost is higher than the child that is expanding, in java this operation will cost
+					 * at least liner time, since the traversal by object's attribute in priority queue cost O(n)
+					 * and add/ remove cost Ologn) therefore, O(nlogn)is needed
+					 * */
+//					for(int action = 1; action <= 8;action++)
+//					{
+//						//produce a new child node
+//						Node child = childNode(problem,parent,action);
+//						int c_h = Problem.heuristic(child);
+//						if(!explored.contains(child.coord) && !frontierHash.contains(child.coord))
+//						{
+//							frontier.add(child);
+//							frontierHash.add(child.coord);
+//						}
+//						//replace the node has same coordinate with child and add child to the queue
+//						else if(frontierHash.contains(child.coord))
+//						{
+//							for(Node n: frontier)
+//							{
+//								/*here is different from UCS*/
+//								int n_h = Problem.heuristic(n);
+//								if(n.coord.equals(child.coord) && ((n.pathCost + n_h) > (child.pathCost + c_h)))
+//								{
+//									frontier.remove(n);
+//									frontier.add(child);
+//									break;
+//								}
+//							}	
+//						}
+//						
+//					}
 				}
 			}
 			return res;
