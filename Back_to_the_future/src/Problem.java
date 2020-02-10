@@ -36,21 +36,13 @@ public class Problem{
 		}
 		if(this.algo.equals("UCS")||this.algo.equals("A*"))
 		{
-			if(action <= 8 && action > 4)
-			{
-				stepCost = 14;
-			}
-			if(action<=4 && action > 1)
+			if((action % 2) != 0)
 			{
 				stepCost = 10;
 			}
-			//action ==1 mean jaunt or go south
-			if(action == 1)
+			else if((action % 2) ==0 )
 			{
-				if(homework.jauntPoint.containsKey(parent.coord))
-					stepCost = Math.abs(homework.jauntPoint.get(parent.coord).year - parent.coord.year);
-				else
-					stepCost = 10;
+				stepCost = 14;
 			}
 		}
 		return stepCost;

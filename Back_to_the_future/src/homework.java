@@ -192,12 +192,17 @@ public class homework{
 	 */
 	public static Node childNode(Problem problem, Node parent, int action)
 	{
-		
+		Node child;
 		// calculate the child coordinate by its parent's coordinate and the action
 		Coordinate coord = inphaseAction(parent, action);
-		Node child = new Node(coord,parent,action,
-							parent.pathCost + problem.stepCost(parent, action),
-							problem.stepCost(parent, action));
+		if(coord.year == parent.coord.year)
+			child = new Node(coord,parent,action,
+								parent.pathCost + problem.stepCost(parent, action),
+								problem.stepCost(parent, action));
+		else
+			child = new Node(coord,parent,action,
+					parent.pathCost + problem.stepCost(parent, action),
+					Math.abs(parent.coord.year-coord.year));
 		return child;	
 		
 	}
@@ -211,77 +216,73 @@ public class homework{
 	public static Coordinate inphaseAction(Node node, int action)
 	{
 
-//
-//			if(homework.jauntPoint.containsKey(node.coord))
-//			{
-//				coord = jauntPoint.get(node.coord);
-//			}	
-//			else {
-			Coordinate coord = new Coordinate();	
-				switch(action) {
-				case 1:
-					if(jauntPoint.containsKey(node.coord))
-							coord =  jauntPoint.get(node.coord);
-					else
-						 coord = new Coordinate(node.coord.x-1 ,node.coord.y, node.coord.year);
-					break;
-					
-				case 2:
-					if(jauntPoint.containsKey(node.coord))
-						coord = jauntPoint.get(node.coord);
-					else
-						coord = new Coordinate(node.coord.x-1 ,node.coord.y+1, node.coord.year);
-					break;
-					
-				case 3: 
+			if(action == 1)
+			{
 				if(jauntPoint.containsKey(node.coord))
-					coord = jauntPoint.get(node.coord);
+					return jauntPoint.get(node.coord);
 				else
-					coord = new Coordinate(node.coord.x ,node.coord.y+1, node.coord.year);
-					break;
-					
-				case 4:
-					if(jauntPoint.containsKey(node.coord))
-						coord = jauntPoint.get(node.coord);
-					else
-						coord = new Coordinate(node.coord.x+1 ,node.coord.y+1, node.coord.year);
-					break;
-					
-				case 5:	
-					if(jauntPoint.containsKey(node.coord))
-						coord = jauntPoint.get(node.coord);
-					else
-						 coord = new Coordinate(node.coord.x+1 ,node.coord.y, node.coord.year);
-					break;
-					
-				case 6: 
-					if(jauntPoint.containsKey(node.coord))
-						coord= jauntPoint.get(node.coord);
-					else
-						coord = new Coordinate(node.coord.x+1 ,node.coord.y-1, node.coord.year);
-					break;
-					
-				case 7: 
-					if(jauntPoint.containsKey(node.coord))
-						coord = jauntPoint.get(node.coord);
-					else
-						coord = new Coordinate(node.coord.x ,node.coord.y-1, node.coord.year);
-					break;
-					
-				case 8:
-					if(jauntPoint.containsKey(node.coord))
-						coord = jauntPoint.get(node.coord);
-					else
-						coord = new Coordinate(node.coord.x-1 ,node.coord.y-1, node.coord.year);
-				default:
-					if(jauntPoint.containsKey(node.coord))
-						coord = jauntPoint.get(node.coord);
-					else
-						coord = new Coordinate(node.coord.x ,node.coord.y, node.coord.year);
-					break;
-				}	
-		
-		return coord;
+				 return new Coordinate(node.coord.x-1 ,node.coord.y, node.coord.year);
+			}
+				
+			else if(action == 2)
+			{
+				if(jauntPoint.containsKey(node.coord))
+					return jauntPoint.get(node.coord);
+				else
+					return new Coordinate(node.coord.x-1 ,node.coord.y+1, node.coord.year);
+			}
+			
+			else if(action == 3)
+			{
+				if(jauntPoint.containsKey(node.coord))
+					return jauntPoint.get(node.coord);
+				else
+					return new Coordinate(node.coord.x ,node.coord.y+1, node.coord.year);
+			}
+				
+			
+			else if(action == 4)
+			{
+				if(jauntPoint.containsKey(node.coord))
+					return jauntPoint.get(node.coord);
+				else
+					return new Coordinate(node.coord.x+1 ,node.coord.y+1, node.coord.year);
+			}
+				
+			
+			else if(action == 5)
+			{
+				if(jauntPoint.containsKey(node.coord))
+					return jauntPoint.get(node.coord);
+				else
+					return new Coordinate(node.coord.x+1 ,node.coord.y, node.coord.year);
+			}
+				
+			
+			else if(action == 6)
+			{
+				if(jauntPoint.containsKey(node.coord))
+					return jauntPoint.get(node.coord);
+				else
+					return new Coordinate(node.coord.x+1 ,node.coord.y-1, node.coord.year);
+			}
+				
+			
+			else if(action == 7)
+			{
+				if(jauntPoint.containsKey(node.coord))
+					return jauntPoint.get(node.coord);
+				else
+					return new Coordinate(node.coord.x ,node.coord.y-1, node.coord.year);
+			}
+			
+			else
+			{
+				if(jauntPoint.containsKey(node.coord))
+					return jauntPoint.get(node.coord);
+				else
+					return new Coordinate(node.coord.x-1 ,node.coord.y-1, node.coord.year);
+			}
 		
 	}
 	/**
@@ -292,7 +293,7 @@ public class homework{
 	public static LinkedList<Node> btfBFS(Problem problem)
 	{
 		
-		LinkedList<Node> frontier = new LinkedList<>();
+		Queue<Node> frontier = new LinkedList<>();
 		//a hash set is used to check if the coordinate is existed in the frontier
 		HashSet<Coordinate> frontierHash = new HashSet<>();
 		//explore set is used to store the node that has been expanded 
