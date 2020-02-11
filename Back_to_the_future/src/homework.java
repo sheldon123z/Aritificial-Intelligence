@@ -73,6 +73,7 @@ public class homework{
             	
             	//store the coordinates as a map between two points in a channel
             	jauntPoint.put(new Coordinate(x,y,year),new Coordinate(x,y,jaunt_year));
+            	jauntPoint.put(new Coordinate(x,y,jaunt_year),new Coordinate(x,y,year));
             	parameter = reader.readLine();
             }
             reader.close();
@@ -118,7 +119,7 @@ public class homework{
 			output = new BufferedWriter(new FileWriter(file));
 			if(find)
 			{      			
-				int totalCost = res.peekLast().pathCost;
+				long totalCost = res.peekLast().pathCost;
 				output.write(String.valueOf(totalCost)+"\n"+res.size()+"\n");
 				for(Node n: res)
 				{
@@ -226,6 +227,7 @@ public class homework{
 		while(!frontier.isEmpty())
 		{
 			parent = frontier.remove();
+			frontierHash.remove(parent.coord);
 			explored.add(parent.coord);
 			//9 actions, 8 directional move + jaunt
 			for(int action = 1; action <= 8;action++)
@@ -285,42 +287,6 @@ public class homework{
 			{	
 				explored.add(parent.coord);
 				exploredHash.put(parent.coord, parent);
-//				PriorityQueue<Node> children = new PriorityQueue<>(new AStarNodeComparator());
-//				for(int action = 1; action <= 8;action++)
-//					{
-//						children.add(childNode(problem,parent,action));
-//					}
-//				while(!children.isEmpty())
-//				{
-//					Node child = children.poll();
-//					
-//					if(!explored.contains(child.coord) && !frontierHash.containsKey(child.coord))
-//					{
-//						frontier.add(child);
-//						frontierHash.put(child.coord,child);
-//					}
-//					else if(frontierHash.containsKey(child.coord))
-//					{
-//						Node n = frontierHash.get(child.coord);
-//						if(((n.pathCost) > (child.pathCost)))
-//						{
-//							frontier.remove(n);
-//							frontier.add(child);
-//							frontierHash.put(child.coord, child);
-//						}
-//					}
-//					else if(explored.contains(child.coord))
-//					{
-//						Node n =  exploredHash.get(child.coord);
-//						if(((n.pathCost) > (child.pathCost)))
-//						{
-//							explored.remove(child.coord);
-//							exploredHash.remove(child.coord);
-//							frontier.add(child);
-//							frontierHash.put(child.coord, child);
-//						}
-//					}
-//				}
 				/*
 				 * the follow part is also correct but it is quicker. we can remove the node which has larger
 				 * path cost directly from queue by using a hashmap to track that node

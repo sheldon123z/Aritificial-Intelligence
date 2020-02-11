@@ -8,8 +8,8 @@ class Node{
 	public Coordinate coord;
     public Node parent;
     public int action;
-    public int pathCost;
-    public int stepCost;
+    public long pathCost;
+    public long stepCost;
     
     public Node (int x, int y,int year)
     {
@@ -22,7 +22,7 @@ class Node{
     	this.coord = coord;
     	this.parent = parent;
     }
-    public Node(Coordinate coord, Node parent, int action, int pathCost, int stepCost) {
+    public Node(Coordinate coord, Node parent, int action, long pathCost, int stepCost) {
     	this.parent = parent;
     	this.action = action;
     	this.pathCost = pathCost;
@@ -47,7 +47,7 @@ class Node{
      * get path cost
      * @return
      */
-    public int getPathCost()
+    public long getPathCost()
     {
     	return this.pathCost;
     }
@@ -55,7 +55,7 @@ class Node{
      * get step cost
      * @return
      */
-    public int getStepCost()
+    public long getStepCost()
     {
     	return this.stepCost;
     }
