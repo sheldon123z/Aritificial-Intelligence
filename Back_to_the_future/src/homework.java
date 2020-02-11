@@ -14,6 +14,7 @@ public class homework{
 	static Coordinate target_state;
 	static int channelNum;
 	static HashMap<Coordinate,Coordinate> jauntPoint = new HashMap<>();
+	
 	static boolean find = false;
 	/**
 	 * main function
@@ -81,8 +82,9 @@ public class homework{
             // output the result 
             outputResult(algorithm);
             long end = System.currentTimeMillis();
-
-            System.out.println((end - start) + " ms");
+            
+            System.out.println("if find a route? " + find + "\n");
+            System.out.println("time is: " + (end - start) + " ms");
     
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -260,7 +262,7 @@ public class homework{
 		PriorityQueue<Node> frontier = new PriorityQueue<>(new NodeComparator());
 		HashMap<Coordinate,Node> frontierHash = new HashMap<>();
 		HashSet<Coordinate> explored = new HashSet<>();
-		HashMap<Coordinate,Node> exploredHash = new HashMap<>();
+//		HashMap<Coordinate,Node> exploredHash = new HashMap<>();
 		LinkedList<Node> res = new LinkedList<>();
 		//initialize a node with initial state 
 		Node parent = new Node(problem.initialState,null,0,0,0);
@@ -286,7 +288,7 @@ public class homework{
 			else
 			{	
 				explored.add(parent.coord);
-				exploredHash.put(parent.coord, parent);
+//				exploredHash.put(parent.coord, parent);
 				/*
 				 * the follow part is also correct but it is quicker. we can remove the node which has larger
 				 * path cost directly from queue by using a hashmap to track that node
@@ -306,9 +308,9 @@ public class homework{
 					else if(frontierHash.containsKey(child.coord))
 					{
 						Node n = frontierHash.get(child.coord);
-						
 						if((n.pathCost > child.pathCost))
 						{
+							frontier.remove(n);
 							frontier.remove(n);
 							frontier.add(child);
 							frontierHash.put(child.coord, child);
@@ -331,7 +333,7 @@ public class homework{
 			PriorityQueue<Node> frontier = new PriorityQueue<>(new AStarNodeComparator());
 			HashMap<Coordinate,Node> frontierHash = new HashMap<>();
 			HashSet<Coordinate> explored = new HashSet<>();
-			HashMap<Coordinate,Node> exploredHash = new HashMap<>();
+//			HashMap<Coordinate,Node> exploredHash = new HashMap<>();
 			LinkedList<Node> res = new LinkedList<>();
 			//initialize a node with initial state 
 			Node parent = new Node(problem.initialState,null,0,0,0);
@@ -357,7 +359,7 @@ public class homework{
 				else
 				{	
 					explored.add(parent.coord);
-					exploredHash.put(parent.coord, parent);
+//					exploredHash.put(parent.coord, parent);
 					/*
 					 * this part is different logic but same implementation
 					 */
@@ -429,6 +431,7 @@ public class homework{
 							if(((n.pathCost + h) > (child.pathCost + h)))
 							{
 								frontier.remove(n);
+								frontier.remove(n);
 								frontier.add(child);
 								frontierHash.put(child.coord, child);
 							}	
@@ -458,21 +461,6 @@ public class homework{
 				
 		}
 		return res;
-	}
-	/**
-	 * check if a list contains a object that has the same coordinate with the child
-	 * @param list
-	 * @param child
-	 * @return
-	 */
-	public static boolean containsSameAttributeObject(LinkedList<Node> list, Node child)
-	{
-		for(Node node: list)
-		{
-			if(node.coord.equals(child.coord))
-				return true;
-		}
-		return false;
 	}
 
 }

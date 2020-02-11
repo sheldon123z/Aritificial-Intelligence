@@ -35,6 +35,7 @@ public class Problem{
 			switch(action) {
 			//jaunt if jaunt, the child node's coordinate is same as its child
 			//or go west
+			//if x=some channel's x y= some channel's y then year should be the other jaunt year
 			case 1:
 				//if x=some channel's x y= some channel's y then year should be the other jaunt year
 				if(homework.jauntPoint.containsKey(node.coord))
