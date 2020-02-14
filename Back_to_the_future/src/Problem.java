@@ -37,11 +37,7 @@ public class Problem{
 			//or go west
 			//if x=some channel's x y= some channel's y then year should be the other jaunt year
 			case 1:
-				//if x=some channel's x y= some channel's y then year should be the other jaunt year
-				if(homework.jauntPoint.containsKey(node.coord))
-					coord = homework.jauntPoint.get(node.coord);
-				else	
-					coord = new Coordinate(node.coord.x-1 ,node.coord.y, node.coord.year);
+				coord = new Coordinate(node.coord.x-1 ,node.coord.y, node.coord.year);
 			break;
 			//east
 			case 2: 
@@ -82,7 +78,7 @@ public class Problem{
 	 * @param action
 	 * @return
 	 */
-	public int stepCost(Node parent, int action)
+	public int stepCost(Node parent, Coordinate coord, int action)
 	{
 		int stepCost = 0;
 		if(this.algo.equals("BFS"))
@@ -95,18 +91,17 @@ public class Problem{
 			{
 				stepCost = 14;
 			}
-			if(action<=4 && action > 1)
+			else if(action<=4 && action > 1)
 			{
 				stepCost = 10;
 			}
-			//action ==1 mean jaunt or go south
-			if(action == 1)
+			//action ==0 mean jaunt or go south
+			else if(action==0 && coord.year != parent.coord.year)
 			{
-				if(homework.jauntPoint.containsKey(parent.coord))
-					stepCost = Math.abs(homework.jauntPoint.get(parent.coord).year - parent.coord.year);
-				else
-					stepCost = 10;
+				stepCost = Math.abs(coord.year - parent.coord.year);
 			}
+			else
+				stepCost = 10;
 		}
 		return stepCost;
 			

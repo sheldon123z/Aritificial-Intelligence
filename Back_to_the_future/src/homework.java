@@ -13,8 +13,8 @@ public class homework{
 	static Coordinate initial_state;
 	static Coordinate target_state;
 	static int channelNum;
-	static HashMap<Coordinate,Coordinate> jauntPoint = new HashMap<>();
-	
+//	static HashMap<Coordinate,Coordinate> jauntPoint = new HashMap<>();
+	static HashMap<Coordinate,HashSet<Coordinate>> jauntPoint = new HashMap<>();
 	static boolean find = false;
 	/**
 	 * main function
@@ -71,10 +71,19 @@ public class homework{
             	int x = Integer.parseInt(data[1].trim());
             	int y = Integer.parseInt(data[2].trim());
             	int jaunt_year = Integer.parseInt(data[3].trim());
-            	
+            	Coordinate coord_1 = new Coordinate(x,y,year);
+            	Coordinate coord_2 = new Coordinate(x,y,jaunt_year);
             	//store the coordinates as a map between two points in a channel
-            	jauntPoint.put(new Coordinate(x,y,year),new Coordinate(x,y,jaunt_year));
-            	jauntPoint.put(new Coordinate(x,y,jaunt_year),new Coordinate(x,y,year));
+            	
+        		HashSet<Coordinate> set = jauntPoint.getOrDefault(coord_1, new HashSet<Coordinate>());
+        		set.add(coord_2);
+        		jauntPoint.put(coord_1, set);
+            	
+        		set = jauntPoint.getOrDefault(coord_2, new HashSet<Coordinate>());
+        		set.add(coord_1);
+        		jauntPoint.put(coord_2, set);
+//            	jauntPoint.put(new Coordinate(x,y,year),new Coordinate(x,y,jaunt_year));
+//            	jauntPoint.put(new Coordinate(x,y,jaunt_year),new Coordinate(x,y,year));
             	parameter = reader.readLine();
             }
             reader.close();
@@ -192,11 +201,13 @@ public class homework{
 	public static Node childNode(Problem problem, Node parent, int action)
 	{
 		Node child;
+		Coordinate coord;
+		
 		// calculate the child coordinate by its parent's coordinate and the action
-		Coordinate coord = problem.inphaseAction(parent, action);
+		coord = problem.inphaseAction(parent, action);
 		child = new Node(coord,parent,action,
-							parent.pathCost + problem.stepCost(parent, action),
-							problem.stepCost(parent, action));
+							parent.pathCost + problem.stepCost(parent,coord,action),
+							problem.stepCost(parent,coord, action));
 		return child;	
 		
 	}
@@ -232,11 +243,29 @@ public class homework{
 			frontierHash.remove(parent.coord);
 			explored.add(parent.coord);
 			//9 actions, 8 directional move + jaunt
+			Queue<Node> children = new LinkedList<>();
+			if(jauntPoint.containsKey(parent.coord) )
+			{
+				HashSet<Coordinate> set = jauntPoint.get(parent.coord);
+				for(Coordinate c : set)
+				{
+					Node child = new Node(c,parent,0,parent.pathCost + 
+							problem.stepCost(parent,c, 0),
+							problem.stepCost(parent, c, 0));
+					children.add(child);
+				}
+			}
+			
 			for(int action = 1; action <= 8;action++)
 			{
-				//produce a new child node
-				Node child = childNode(problem,parent,action);
 				
+				Node child = childNode(problem,parent,action);
+				children.add(child);
+			}
+			
+			while(!children.isEmpty())
+			{
+				Node child = children.poll();
 				if(!explored.contains(child.coord) && !frontierHash.contains(child.coord))
 				{
 					if(problem.goalTest(child.coord))
@@ -246,8 +275,12 @@ public class homework{
 					}
 					frontier.add(child);
 					frontierHash.add(child.coord);
-				}	
+				}
 			}
+			
+				
+	
+			
 		}
 		return res;
 	}
@@ -262,7 +295,6 @@ public class homework{
 		PriorityQueue<Node> frontier = new PriorityQueue<>(new NodeComparator());
 		HashMap<Coordinate,Node> frontierHash = new HashMap<>();
 		HashSet<Coordinate> explored = new HashSet<>();
-//		HashMap<Coordinate,Node> exploredHash = new HashMap<>();
 		LinkedList<Node> res = new LinkedList<>();
 		//initialize a node with initial state 
 		Node parent = new Node(problem.initialState,null,0,0,0);
@@ -288,16 +320,34 @@ public class homework{
 			else
 			{	
 				explored.add(parent.coord);
-//				exploredHash.put(parent.coord, parent);
 				/*
 				 * the follow part is also correct but it is quicker. we can remove the node which has larger
 				 * path cost directly from queue by using a hashmap to track that node
 				 * */
+				PriorityQueue<Node> children = new PriorityQueue<>(new NodeComparator());
+				if(jauntPoint.containsKey(parent.coord))
+				{
+					HashSet<Coordinate> set = jauntPoint.get(parent.coord);
+					for(Coordinate c : set)
+					{
+						Node child = new Node(c,parent,0,parent.pathCost + 
+								problem.stepCost(parent,c, 0),
+								problem.stepCost(parent, c, 0));
+								
+						children.add(child);
+					}
+					
+				}
+				
 				for(int action = 1; action <= 8;action++)
 				{
-					//produce a new child node
 					Node child = childNode(problem,parent,action);
-					
+					children.add(child);
+				}
+				while(!children.isEmpty())
+				{
+					//produce a new child node
+					Node child = children.poll();
 					//if this node is a new node
 					if(!explored.contains(child.coord) && !frontierHash.containsKey(child.coord))
 					{
@@ -333,7 +383,7 @@ public class homework{
 			PriorityQueue<Node> frontier = new PriorityQueue<>(new AStarNodeComparator());
 			HashMap<Coordinate,Node> frontierHash = new HashMap<>();
 			HashSet<Coordinate> explored = new HashSet<>();
-//			HashMap<Coordinate,Node> exploredHash = new HashMap<>();
+			HashMap<Coordinate,Node> exploredHash = new HashMap<>();
 			LinkedList<Node> res = new LinkedList<>();
 			//initialize a node with initial state 
 			Node parent = new Node(problem.initialState,null,0,0,0);
@@ -359,7 +409,7 @@ public class homework{
 				else
 				{	
 					explored.add(parent.coord);
-//					exploredHash.put(parent.coord, parent);
+					exploredHash.put(parent.coord, parent);
 					/*
 					 * this part is different logic but same implementation
 					 */
@@ -408,14 +458,33 @@ public class homework{
 //						}
 //					}
 					
+					
+					PriorityQueue<Node> children = new PriorityQueue<>(new AStarNodeComparator());
+					if(jauntPoint.containsKey(parent.coord))
+					{
+						HashSet<Coordinate> set = jauntPoint.get(parent.coord);
+						for(Coordinate c : set)
+						{
+							Node child = new Node(c,parent,0,parent.pathCost + 
+									problem.stepCost(parent,c, 0),
+									problem.stepCost(parent, c, 0));
+							children.add(child);
+						}
+						
+					}
+					for(int action = 1; action <= 8;action++)
+						{
+							Node child = childNode(problem,parent,action);
+							children.add(child);
+						}
 					/*
 					 * the follow part is also correct but it is quicker. we can remove the node which has larger
 					 * path cost directly from queue by using a hashmap to track that node
 					 * */
-					for(int action = 1; action <= 8;action++)
+					while(!children.isEmpty()) 
 					{
 						//produce a new child node
-						Node child = childNode(problem,parent,action);
+						Node child = children.poll();
 						int h = Problem.heuristic(child);
 						//if this node is a new node
 						if(!explored.contains(child.coord) && !frontierHash.containsKey(child.coord))
