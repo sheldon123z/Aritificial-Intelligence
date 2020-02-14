@@ -4,6 +4,7 @@ import java.util.Comparator;
  * @author xiaodongzheng
  *
  */
+
 public class NodeComparator implements Comparator<Node>{
 
 	@Override

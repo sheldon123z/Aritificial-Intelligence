@@ -75,6 +75,6 @@ class Node{
        }
 	@Override
 	 public int hashCode() {
-        return this.coord.hashCode() + this.action * 3;
+        return this.coord.hashCode();
     }
 }

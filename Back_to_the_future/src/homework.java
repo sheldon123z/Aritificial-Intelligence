@@ -14,6 +14,7 @@ public class homework{
 	static Coordinate target_state;
 	static int channelNum;
 	static HashMap<Coordinate,Coordinate> jauntPoint = new HashMap<>();
+	
 	static boolean find = false;
 	/**
 	 * main function
@@ -73,6 +74,7 @@ public class homework{
             	
             	//store the coordinates as a map between two points in a channel
             	jauntPoint.put(new Coordinate(x,y,year),new Coordinate(x,y,jaunt_year));
+            	jauntPoint.put(new Coordinate(x,y,jaunt_year),new Coordinate(x,y,year));
             	parameter = reader.readLine();
             }
             reader.close();
@@ -80,8 +82,9 @@ public class homework{
             // output the result 
             outputResult(algorithm);
             long end = System.currentTimeMillis();
-
-            System.out.println((end - start) + " ms");
+            
+            System.out.println("if find a route? " + find + "\n");
+            System.out.println("time is: " + (end - start) + " ms");
     
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -156,12 +159,29 @@ public class homework{
      * @param action
      * @return return true if is, false otherwise
      */
-    public static boolean checkIfValidCoord(Node node)
-    {
-    	if(node.coord.x >= 0 && node.coord.x < width && node.coord.y >= 0 && node.coord.y < height)
+    public static boolean checkIfValidCoord(Node node, int action)
+	{
+		if(node.coord.x >=0 && node.coord.x < width && node.coord.y >= 0 && node.coord.y < height && action == 0)
 			return true;
-    	return false;
-    }
+		if(node.coord.x >=1 && node.coord.x < width && node.coord.y >= 0 && node.coord.y < height && action == 1)
+			return true;
+		if(node.coord.x >=0 && node.coord.x < width-1 && node.coord.y >= 0 && node.coord.y < height && action == 2)
+			return true;
+		if(node.coord.x >=0 && node.coord.x < width && node.coord.y >= 1 && node.coord.y < height && action == 3)
+			return true;
+		if(node.coord.x >=0 && node.coord.x < width && node.coord.y >= 0 && node.coord.y < height-1 && action == 4)
+			return true;
+		if(node.coord.x >=0 && node.coord.x < width-1 && node.coord.y >= 1 && node.coord.y < height && action == 5)
+			return true;
+		if(node.coord.x >=1 && node.coord.x < width && node.coord.y >= 1 && node.coord.y < height && action == 6)
+			return true;
+		if(node.coord.x >=0 && node.coord.x < width-1 && node.coord.y >= 0 && node.coord.y < height-1 && action == 7)
+			return true;
+		if(node.coord.x >=1 && node.coord.x < width && node.coord.y >= 0 && node.coord.y < height-1 && action == 8)
+			return true;
+		return false;
+	}
+	
 	/**
 	 * produce a child node with suitable parameters
 	 * @param problem
@@ -173,105 +193,11 @@ public class homework{
 	{
 		Node child;
 		// calculate the child coordinate by its parent's coordinate and the action
-		Coordinate coord = inphaseAction(parent, action);
-		if(coord.year == parent.coord.year)
-			child = new Node(coord,parent,action,
-								parent.pathCost + problem.stepCost(parent, action),
-								problem.stepCost(parent, action));
-		else
-			child = new Node(coord,parent,action,
-					parent.pathCost + problem.stepCost(parent, action),
-					Math.abs(parent.coord.year-coord.year));
+		Coordinate coord = problem.inphaseAction(parent, action);
+		child = new Node(coord,parent,action,
+							parent.pathCost + problem.stepCost(parent, action),
+							problem.stepCost(parent, action));
 		return child;	
-		
-	}
-	/**
-	 * action move a node to a position in the same world
-	 * action 1:south, 2:north, 3:west, 4:east, 5:south west, 6:north west, 7:south east, 8 north east
-	 * @param node
-	 * @param action
-	 * @return
-	 */
-	public static Coordinate inphaseAction(Node parent, int action)
-	{
-//			if(jauntPoint.containsKey(parent.coord))
-//				return jauntPoint.get(parent.coord);
-//			else 
-			if(action == 1)
-			{
-				Coordinate coord = new Coordinate(parent.coord.x-1 ,parent.coord.y, parent.coord.year);
-				if(jauntPoint.containsKey(coord))
-					return jauntPoint.get(coord);
-				else 
-				 return coord;
-			}
-				
-			else if(action == 2)
-			{
-				Coordinate coord = new Coordinate(parent.coord.x-1 ,parent.coord.y+1, parent.coord.year);	
-				if(jauntPoint.containsKey(coord))
-					return jauntPoint.get(	coord);
-				else
-					return coord;
-			}
-			
-			else if(action == 3)
-			{
-				Coordinate coord = new Coordinate(parent.coord.x ,parent.coord.y+1, parent.coord.year);
-				if(jauntPoint.containsKey(coord))
-					return jauntPoint.get(coord);
-				else
-					return coord;
-			}
-				
-			
-			else if(action == 4)
-			{
-				Coordinate coord = new Coordinate(parent.coord.x+1 ,parent.coord.y+1, parent.coord.year);
-				if(jauntPoint.containsKey(coord))
-					return jauntPoint.get(coord);
-				else
-					return coord;
-			}
-				
-			
-			else if(action == 5)
-			{
-				Coordinate coord = new Coordinate(parent.coord.x+1 ,parent.coord.y, parent.coord.year);
-				if(jauntPoint.containsKey(coord))
-					return jauntPoint.get(coord);
-				else
-					return coord;
-			}
-				
-			
-			else if(action == 6)
-			{
-				Coordinate coord = new Coordinate(parent.coord.x+1 ,parent.coord.y-1, parent.coord.year);
-				if(jauntPoint.containsKey(coord))
-					return jauntPoint.get(coord);
-				else
-					return coord;
-			}
-				
-			
-			else if(action == 7)
-			{
-				Coordinate coord = new Coordinate(parent.coord.x ,parent.coord.y-1, parent.coord.year);
-				if(jauntPoint.containsKey(coord))
-					return jauntPoint.get(coord);
-				else
-					return coord;
-			}
-			
-			else
-			{
-				Coordinate coord = new Coordinate(parent.coord.x-1 ,parent.coord.y-1, parent.coord.year);
-				if(jauntPoint.containsKey(coord))
-					return jauntPoint.get(coord);
-				else
-					return coord;
-			}
 		
 	}
 	/**
@@ -282,7 +208,7 @@ public class homework{
 	public static LinkedList<Node> btfBFS(Problem problem)
 	{
 		
-		Queue<Node> frontier = new LinkedList<>();
+		LinkedList<Node> frontier = new LinkedList<>();
 		//a hash set is used to check if the coordinate is existed in the frontier
 		HashSet<Coordinate> frontierHash = new HashSet<>();
 		//explore set is used to store the node that has been expanded 
@@ -290,6 +216,7 @@ public class homework{
 		//used to store the result
 		LinkedList<Node> res = new LinkedList<>();
 		Node parent = new Node(problem.initialState,null,0,0,0);
+		
 		
 		if(parent.coord.equals(target_state))
 		{
@@ -299,23 +226,18 @@ public class homework{
 		}
 		frontier.add(parent);
 		frontierHash.add(parent.coord);
-		while(true)
+		while(!frontier.isEmpty())
 		{
-			if(frontier.isEmpty())
-			{
-				find = false;
-				return res;
-			}
-			parent = frontier.poll();
+			parent = frontier.remove();
 			frontierHash.remove(parent.coord);
 			explored.add(parent.coord);
-			//check actions
+			//9 actions, 8 directional move + jaunt
 			for(int action = 1; action <= 8;action++)
-			{				
+			{
+				//produce a new child node
 				Node child = childNode(problem,parent,action);
-				if(!checkIfValidCoord(child))
-					continue;
-				else if(!explored.contains(child.coord) && !frontierHash.contains(child.coord))
+				
+				if(!explored.contains(child.coord) && !frontierHash.contains(child.coord))
 				{
 					if(problem.goalTest(child.coord))
 					{
@@ -327,6 +249,7 @@ public class homework{
 				}	
 			}
 		}
+		return res;
 	}
 	/**
 	 * the algorithm of UCS
@@ -339,7 +262,7 @@ public class homework{
 		PriorityQueue<Node> frontier = new PriorityQueue<>(new NodeComparator());
 		HashMap<Coordinate,Node> frontierHash = new HashMap<>();
 		HashSet<Coordinate> explored = new HashSet<>();
-		HashMap<Coordinate,Node> exploredHash = new HashMap<>();
+//		HashMap<Coordinate,Node> exploredHash = new HashMap<>();
 		LinkedList<Node> res = new LinkedList<>();
 		//initialize a node with initial state 
 		Node parent = new Node(problem.initialState,null,0,0,0);
@@ -362,55 +285,19 @@ public class homework{
 				find = true;
 				return solution(parent, res);
 			}
-			explored.add(parent.coord);
-			exploredHash.put(parent.coord, parent);
-//				PriorityQueue<Node> children = new PriorityQueue<>(new NodeComparator());
-//				for(int action = 1; action <= 8;action++)
-//					{
-//						children.add(childNode(problem,parent,action));
-//					}
-//				while(!children.isEmpty())
-//				{
-//					Node child = children.poll();
-//					
-//					if(!explored.contains(child.coord) && !frontierHash.containsKey(child.coord))
-//					{
-//						frontier.add(child);
-//						frontierHash.put(child.coord,child);
-//					}
-//					else if(frontierHash.containsKey(child.coord))
-//					{
-//						Node n = frontierHash.get(child.coord);
-//						if(((n.pathCost) > (child.pathCost)))
-//						{
-//							frontier.remove(n);
-//							frontier.add(child);
-//							frontierHash.put(child.coord, child);
-//						}
-//					}
-//					else if(explored.contains(child.coord))
-//					{
-//						Node n =  exploredHash.get(child.coord);
-//						if(((n.pathCost) > (child.pathCost)))
-//						{
-//							explored.remove(child.coord);
-//							exploredHash.remove(child.coord);
-//							frontier.add(child);
-//							frontierHash.put(child.coord, child);
-//						}
-//					}
-//				}
-			/*
-			 * the follow part is also correct but it is quicker. we can remove the node which has larger
-			 * path cost directly from queue by using a hashmap to track that node
-			 * */
-			for(int action = 1; action <= 8;action++)
-			{
-				//produce a new child node
-				Node child = childNode(problem,parent,action);
-				if(!checkIfValidCoord(child))
-					continue;
-				else {
+			else
+			{	
+				explored.add(parent.coord);
+//				exploredHash.put(parent.coord, parent);
+				/*
+				 * the follow part is also correct but it is quicker. we can remove the node which has larger
+				 * path cost directly from queue by using a hashmap to track that node
+				 * */
+				for(int action = 1; action <= 8;action++)
+				{
+					//produce a new child node
+					Node child = childNode(problem,parent,action);
+					
 					//if this node is a new node
 					if(!explored.contains(child.coord) && !frontierHash.containsKey(child.coord))
 					{
@@ -421,16 +308,16 @@ public class homework{
 					else if(frontierHash.containsKey(child.coord))
 					{
 						Node n = frontierHash.get(child.coord);
-						
 						if((n.pathCost > child.pathCost))
 						{
+							frontier.remove(n);
 							frontier.remove(n);
 							frontier.add(child);
 							frontierHash.put(child.coord, child);
 						}	
 					}
-				}	
-			
+					
+				}
 			}
 		}
 		return res;
@@ -446,7 +333,7 @@ public class homework{
 			PriorityQueue<Node> frontier = new PriorityQueue<>(new AStarNodeComparator());
 			HashMap<Coordinate,Node> frontierHash = new HashMap<>();
 			HashSet<Coordinate> explored = new HashSet<>();
-			HashMap<Coordinate,Node> exploredHash = new HashMap<>();
+//			HashMap<Coordinate,Node> exploredHash = new HashMap<>();
 			LinkedList<Node> res = new LinkedList<>();
 			//initialize a node with initial state 
 			Node parent = new Node(problem.initialState,null,0,0,0);
@@ -472,7 +359,7 @@ public class homework{
 				else
 				{	
 					explored.add(parent.coord);
-					exploredHash.put(parent.coord, parent);
+//					exploredHash.put(parent.coord, parent);
 					/*
 					 * this part is different logic but same implementation
 					 */
@@ -529,31 +416,27 @@ public class homework{
 					{
 						//produce a new child node
 						Node child = childNode(problem,parent,action);
-						if(!checkIfValidCoord(child))
-							continue;
-						else
+						int h = Problem.heuristic(child);
+						//if this node is a new node
+						if(!explored.contains(child.coord) && !frontierHash.containsKey(child.coord))
 						{
-							
-							int h = Problem.heuristic(child);
-							//if this node is a new node
-							if(!explored.contains(child.coord) && !frontierHash.containsKey(child.coord))
-							{
-								frontier.add(child);
-								frontierHash.put(child.coord,child);
-							}
-							//replace the node has same coordinate with child and add child to the queue
-							else if(frontierHash.containsKey(child.coord))
-							{
-								Node n = frontierHash.get(child.coord);
-								int n_h = Problem.heuristic(n);
-								if(((n.pathCost + n_h) > (child.pathCost + h)))
-								{
-									frontier.remove(n);
-									frontier.add(child);
-									frontierHash.put(child.coord, child);
-								}	
-							}
+							frontier.add(child);
+							frontierHash.put(child.coord,child);
 						}
+						//replace the node has same coordinate with child and add child to the queue
+						else if(frontierHash.containsKey(child.coord))
+						{
+							Node n = frontierHash.get(child.coord);
+							
+							if(((n.pathCost + h) > (child.pathCost + h)))
+							{
+								frontier.remove(n);
+								frontier.remove(n);
+								frontier.add(child);
+								frontierHash.put(child.coord, child);
+							}	
+						}
+						
 					}
 				}
 			}
@@ -567,11 +450,9 @@ public class homework{
 	 */
 	public static LinkedList<Node> solution(Node child, LinkedList<Node> res){
 		res.add(child);
-		while(true )
+		while(child.parent != null )
 		{	
 			child = child.parent;
-			if(child == null)
-				break;
 			res.addFirst(child);
 			if(child.coord.equals(initial_state))
 			{
@@ -581,5 +462,6 @@ public class homework{
 		}
 		return res;
 	}
+
 }
 

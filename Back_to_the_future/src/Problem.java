@@ -20,7 +20,62 @@ public class Problem{
 		this.algo = algo;
 	}
 	
-	
+	/**
+	 * action move a node to a position in the same world
+	 * action 1:south, 2:north, 3:west, 4:east, 5:south west, 6:north west, 7:south east, 8 north east
+	 * @param node
+	 * @param action
+	 * @return
+	 */
+	public Coordinate inphaseAction(Node node, int action)
+	{
+		Coordinate coord;
+		if(homework.checkIfValidCoord(node, action))
+		{
+			switch(action) {
+			//jaunt if jaunt, the child node's coordinate is same as its child
+			//or go west
+			//if x=some channel's x y= some channel's y then year should be the other jaunt year
+			case 1:
+				//if x=some channel's x y= some channel's y then year should be the other jaunt year
+				if(homework.jauntPoint.containsKey(node.coord))
+					coord = homework.jauntPoint.get(node.coord);
+				else	
+					coord = new Coordinate(node.coord.x-1 ,node.coord.y, node.coord.year);
+			break;
+			//east
+			case 2: 
+				coord = new Coordinate(node.coord.x+1 ,node.coord.y, node.coord.year);
+			break;
+			//north
+			case 3: coord = new Coordinate(node.coord.x ,node.coord.y-1, node.coord.year);
+			break;
+			//south
+			case 4: coord = new Coordinate(node.coord.x ,node.coord.y+1, node.coord.year);
+			break;
+			//moveNorthEast
+			case 5: coord = new Coordinate(node.coord.x+1 ,node.coord.y-1, node.coord.year);
+			break;
+			//moveNorthWest
+			case 6:coord = new Coordinate(node.coord.x-1 ,node.coord.y-1, node.coord.year);
+			break;
+			//moveSouthEast
+			case 7:coord = new Coordinate(node.coord.x+1 ,node.coord.y+1, node.coord.year);
+			break;
+			//moveSouthWest
+			case 8:coord = new Coordinate(node.coord.x-1 ,node.coord.y+1, node.coord.year);
+			break;
+			default:
+				coord = new Coordinate(node.coord.x ,node.coord.y, node.coord.year);
+			}
+		
+		}
+		else
+			coord = new Coordinate(node.coord.x ,node.coord.y, node.coord.year);
+		
+		return coord;
+		
+	}
 	/**
 	 * calculate the stepCost for each node
 	 * @param parent
@@ -36,13 +91,21 @@ public class Problem{
 		}
 		if(this.algo.equals("UCS")||this.algo.equals("A*"))
 		{
-			if((action % 2) != 0)
+			if(action <= 8 && action > 4)
+			{
+				stepCost = 14;
+			}
+			if(action<=4 && action > 1)
 			{
 				stepCost = 10;
 			}
-			else if((action % 2) ==0 )
+			//action ==1 mean jaunt or go south
+			if(action == 1)
 			{
-				stepCost = 14;
+				if(homework.jauntPoint.containsKey(parent.coord))
+					stepCost = Math.abs(homework.jauntPoint.get(parent.coord).year - parent.coord.year);
+				else
+					stepCost = 10;
 			}
 		}
 		return stepCost;
@@ -78,11 +141,6 @@ public class Problem{
 	 * @return if the state is exactly same with the target_state return true, otherwise return false
 	 */
 	public boolean goalTest(Coordinate state) {
-		if(state==null)
-		{
-			System.out.println("null");
-		}
-			
 		if(state.equals(this.targetState))
 			return true;
 		return false;
