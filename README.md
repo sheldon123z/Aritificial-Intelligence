@@ -1,4 +1,4 @@
-## This is a Artificial intelligence practice homework of USC
+## This is a Artificial intelligence practice homework of USC CSCI561
 
 ### The code uses A* search, UCS search, BFS search methods in mutiple worlds to get a best routine to the destination
 
