@@ -57,5 +57,5 @@ For example, the following is a sample output of the corresponding input above:
 ## Run method:
 Import to Eclipse   
 select test cases and copy them to the Back_to_the_future folder  
-click run
+click run.
 
